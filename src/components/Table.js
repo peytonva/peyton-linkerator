@@ -79,7 +79,7 @@ const DataTable = () => {
           <TableCell align="right">Date Posted</TableCell>
           <TableCell align="right">Comment</TableCell>
           <TableCell align="right">Click Count</TableCell>
-          <TableCell align="right">Tags</TableCell>
+          <TableCell align="right">Tag</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
