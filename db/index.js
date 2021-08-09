@@ -1,22 +1,22 @@
-const { Client } = require('pg');
-const DB_NAME = 'peyton-linkerator';
-const DB_URL = process.env.DATABASE.URL || `postgres://localhost:5432/${DB_NAME}`;
-const client = new Client(DB_URL)
+const { Client } = require("pg");
+const DB_NAME = "peyton-linkerator";
+const DB_URL = `postgres://localhost:5432/${DB_NAME}`;
+const client = new Client(DB_URL);
 
-// This is where you'll be creating your db functions 
-// For example, making a function that fetches all of the links from your links table in your DB 
+// This is where you'll be creating your db functions
+// For example, making a function that fetches all of the links from your links table in your DB
 
 // database methods
-async function createLink({ url, comment }) {
+async function createLink({ url, comment, tag }) {
   try {
     const {
       rows: [link],
     } = await client.query(
-      `INSERT INTO links(url, comment)
-      VALUES($1 , $2)
+      `INSERT INTO links(url, comment, tag)
+      VALUES($1, $2, $3)
       RETURNING *
       `,
-      [url, comment]
+      [url, comment, tag]
     );
 
     return link;
@@ -24,7 +24,7 @@ async function createLink({ url, comment }) {
     console.error(error);
     throw error;
   }
-};
+}
 
 async function getLinks() {
   try {
@@ -37,7 +37,7 @@ async function getLinks() {
     console.error(error);
     throw error;
   }
-};
+}
 
 async function getLinkById(id) {
   try {
@@ -56,7 +56,7 @@ async function getLinkById(id) {
     console.error(error);
     throw error;
   }
-};
+}
 
 async function createTag({ name }) {
   try {
@@ -76,7 +76,7 @@ async function createTag({ name }) {
     console.error(error);
     throw error;
   }
-};
+}
 
 async function getTags() {
   try {
@@ -89,7 +89,7 @@ async function getTags() {
     console.error(error);
     throw error;
   }
-};
+}
 
 async function destroyLink(id) {
   try {
@@ -116,7 +116,7 @@ async function destroyLink(id) {
     console.error(error);
     throw error;
   }
-};
+}
 
 async function createLinkTags({ linksId, tagsId }) {
   try {
@@ -136,12 +136,12 @@ async function createLinkTags({ linksId, tagsId }) {
     console.error(error);
     throw error;
   }
-};
+}
 
 async function getLinksWithTags() {
   try {
     const { rows } = await client.query(` 
-    SELECT links.url, links.clickCount, links.comment, links.date, tags.name AS tagName
+    SELECT links.url, links.clickCount, links.comment, links.date, tags.name AS tagName, links.id AS linkId
     FROM link_tags
     JOIN links ON link_tags."linksId" = links.id
     JOIN tags ON link_tags."tagsId" = tags.id`);
@@ -151,7 +151,7 @@ async function getLinksWithTags() {
     console.error(error);
     throw error;
   }
-};
+}
 
 // export
 module.exports = {

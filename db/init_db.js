@@ -26,6 +26,7 @@ async function buildTables() {
         url VARCHAR(255) NOT NULL,
         clickCount INT DEFAULT 0,
         comment VARCHAR(255) NOT NULL,
+        tag VARCHAR(255) NOT NULL,
         date DATE DEFAULT CURRENT_DATE
       );
       CREATE TABLE tags (
@@ -49,15 +50,22 @@ async function populateInitialData() {
     const linksToCreate = [
       {
         url: "https://www.reddit.com/",
+        clickCount: 0,
         comment: "The front page of the internet",
+        tag: "Forums",
       },
       {
         url: "https://www.instagram.com/",
-        comment: "A place to share photos with family and friends",
+        clickCount: 0,
+        comment: "Where you share photos with family and friends",
+        tag: "Photos",
       },
       {
         url: "https://www.youtube.com/",
-        comment:"The place to broadcast yourself"}
+        clickCount: 0,
+        comment: "The place to broadcast yourself",
+        tag: "Videos",
+      },
     ];
     const links = await Promise.all(linksToCreate.map(createLink));
     console.log("Test links", links);
@@ -80,8 +88,8 @@ async function populateInitialTagData() {
         name: "Photos",
       },
       {
-        name: "Videos"
-      }
+        name: "Videos",
+      },
     ];
 
     const tags = await Promise.all(tagsToCreate.map(createTag));
@@ -110,8 +118,8 @@ async function populateInitialLinkTagsData() {
       },
       {
         linksId: youtubeLink.id,
-        tagsId: youtubeTag.id
-      }
+        tagsId: youtubeTag.id,
+      },
     ];
     const linkTags = await Promise.all(linkTagsToCreate.map(createLinkTags));
     console.log("link_tags created");
